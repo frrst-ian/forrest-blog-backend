@@ -6,5 +6,4 @@ postRouter.get("/", postController.getPublishedPosts);
 postRouter.get("/:id", postController.getPostWithComments);
 postRouter.post("/:id/comments", postController.createComment);
 
-
 module.exports = postRouter;
