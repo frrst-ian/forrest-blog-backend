@@ -11,19 +11,12 @@ const flash = require('connect-flash');
 // Authentication
 const passport = require('./config/passport');
 
-// Database
-const pool = require('./db/pool');
-
 // Route imports
 const indexRouter = require("./routes/index");
 
 // App initialization
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// View engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
 
 // Session configuration with PostgreSQL store
 app.use(session({
@@ -44,10 +37,6 @@ app.use(flash());
 
 // Body parser middleware
 app.use(express.urlencoded({ extended: false }));
-
-// Static files middleware
-const assetsPath = path.join(__dirname, "public");
-app.use(express.static(assetsPath));
 
 // Route handlers
 app.use("/", indexRouter);
