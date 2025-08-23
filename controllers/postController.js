@@ -76,4 +76,8 @@ async function createComment(req, res, next) {
     }
 }
 
-module.exports = { getPublishedPosts, getPostWithComments, createComment };
+module.exports = {
+    getPublishedPosts,
+    getPostWithComments,
+    createComment
+};
