@@ -1,13 +1,5 @@
-async function getIndex(req, res) {
-    try {
-        res.render("index", {
-            user: req.user,
-            messages: req.flash()
-        });
-    } catch (error) {
-        console.error("Index page error:", error);
-        res.status(500).render("error", { message: "Server Error" });
-    }
+function getApiInfo(req, res) {
+    res.json({ message: "Blog API is running" });
 }
 
-module.exports = { getIndex };
+module.exports = { getApiInfo };
