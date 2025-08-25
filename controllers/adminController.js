@@ -4,15 +4,9 @@ const prisma = require("../models/prisma");
 async function getAllPosts(req, res, next) {
     try {
         const posts = await prisma.post.findMany({
-            select: {
-                id: true,
-                title: true,
-                content: true,
-                createdAt: true,
-                published: true,
+            include: {
                 user: true,
-                _count:
-                    { comments: true }
+                comments: true
             }
         });
         res.json(posts);

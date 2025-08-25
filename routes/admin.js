@@ -9,6 +9,6 @@ adminRouter.delete("/posts/:id", adminController.deletePost);
 adminRouter.put("/posts/:id/published", adminController.togglePublishStatus);
 adminRouter.delete("/comments/:id", adminController.deleteComment);
 
-
+module.exports = adminRouter;
 
 
