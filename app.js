@@ -4,6 +4,7 @@ require('dotenv').config();
 // Core dependencies
 const express = require("express");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 
 // Authentication
 const passport = require('./config/passport');
@@ -27,17 +28,27 @@ app.use("/posts", postRouter);
 app.use("/admin", adminRouter);
 
 
-// Authentication routes
+// Auth route
 app.post("/auth/login", (req, res) => {
-  // TODO: Add proper JWT config
-  const { username, password } = req.body;
+  passport.authenticate('local', { session: false }, (err, user, info) => {
+    if (err) {
+      return res.status(500).json({ error: 'Authentication error' });
+    }
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
 
-  if (username === "admin" && password === "nice") {
-    res.json({ token: "fake-jwt-token" });
-  } else {
-    res.status(401).json({ error: "Forbidden" });
-  }
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
 
+    res.json({
+      token,
+      user: { id: user.id, email: user.email, username: user.username }
+    });
+  })(req, res, next);
 });
 
 
