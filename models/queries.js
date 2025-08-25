@@ -1,7 +1,19 @@
-const db = require("./prisma");
+const prisma = require("./prisma");
 
-async function name(params) {
-
+async function getUserById(id) {
+    return await prisma.user.findUnique({
+        where: {
+            id: id
+        }
+    })
 }
 
-module.exports = {};
+async function getUserByEmail(email) {
+    return await prisma.user.findUnique({
+        where: {
+            email: email
+        }
+    })
+}
+
+module.exports = { getUserById, getUserByEmail };
