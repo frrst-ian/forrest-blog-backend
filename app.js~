@@ -27,6 +27,7 @@ app.use("/", indexRouter);
 app.use("/posts", postRouter);
 app.use("/admin", adminRouter);
 
+
 // Auth route
 app.post("/auth/login", (req, res) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
@@ -47,8 +48,9 @@ app.post("/auth/login", (req, res) => {
       token,
       user: { id: user.id, email: user.email, username: user.username }
     });
-  })(req, res);
+  })(req, res, next);
 });
+
 
 // Start server
 app.listen(PORT, () => {
