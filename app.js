@@ -20,7 +20,38 @@ const PORT = process.env.PORT || 3000;
 
 // JSON parser middleware
 app.use(express.json());
-app.use(cors());
+
+// cors config
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin ( Postman)
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      'http://localhost:3001',  // Blog reader frontend
+      'http://localhost:3002',  // Admin frontend  
+      'http://localhost:5173',  // Vite dev server
+      'https://myblog.com',   // Production blog reader
+      'https://admin.myblog.com' // Production admin
+    ];
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'Authorization'
+  ],
+  optionsSuccessStatus: 200
+}));
 
 // Route handlers
 app.use("/", indexRouter);
