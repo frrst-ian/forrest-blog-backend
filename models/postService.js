@@ -39,12 +39,6 @@ async function getPostWithComments(id) {
     })
 }
 
-async function createPost(postData) {
-    return await prisma.post.create({
-        data: postData
-    });
-}
-
 async function createComment(postId, authorName, content) {
     return await prisma.comment.create({
         data: {
@@ -54,6 +48,21 @@ async function createComment(postId, authorName, content) {
         }
     });
 }
+
+async function createPost(postData) {
+    return await prisma.post.create({
+        data: postData
+    });
+}
+
+async function getPostById(postId) {
+    return await prisma.post.findUnique({
+        where: {
+            id: postId
+        }
+    })
+}
+
 
 async function updatePost(postId, updatedData) {
     return await prisma.post.update({
@@ -113,5 +122,6 @@ module.exports = {
     deleteComment,
     getPublishedPosts,
     getPostWithComments,
-    createComment
+    createComment,
+    getPostById
 };
