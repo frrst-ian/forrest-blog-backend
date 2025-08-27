@@ -1,66 +1,35 @@
-
-
-const prisma = require("../models/prisma");
+const postService = require("../models/postService");
+const { sendError, sendSuccess } = require('../utils/responses');
 
 async function getPublishedPosts(req, res, next) {
-    const posts = await prisma.post.findMany({
-        where: {
-            published: true
-        }
-    });
+    const posts = await postService.getPublishedPosts();
 
-    res.json(posts);
+    return sendSuccess(res, posts)
 }
 
 async function getPostWithComments(req, res, next) {
     const id = req.validId;
-    if (isNaN(id)) {
-        return res.status(400).json({ error: "Invalid post ID" });
-    }
 
-    const postWithComments = await prisma.post.findUnique({
-        where: {
-            id: id
-        },
-        select: {
-            id: true,
-            title: true,
-            content: true,
-            createdAt: true,
-            comments: {
-                select: {
-                    id: true,
-                    authorName: true,
-                    content: true,
-                    createdAt: true
-                }
-            }
-        },
-    })
+    const postWithComments = await postService.getPostWithComments(id);
 
     if (!postWithComments) {
-        return res.status(404).json({ error: "Post not found" });
+        return sendError(res, 404, "Post not found")
     }
 
-    res.json(postWithComments)
+    return sendSuccess(res, postWithComments)
 }
 
 async function createComment(req, res, next) {
     const postId = req.validId;
-    if (isNaN(postId)) {
-        return res.status(400).json({ error: "Invalid post ID" });
-    }
 
     const { authorName, content } = req.body;
     if (!authorName || !content) {
-        return res.status(400).json({ error: "Author name and content required" });
+        return sendError(res, 400, "Author name and content required")
     }
 
-    const comment = await prisma.comment.create({
-        data: { postId, authorName, content }
-    });
-
+    const comment = await postService.createComment(postId, authorName, content);
     res.status(201).json(comment);
+    return sendSuccess(res, comment, 201);
 }
 
 module.exports = {

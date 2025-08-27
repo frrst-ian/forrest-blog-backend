@@ -1,37 +1,29 @@
-const prisma = require("../models/prisma");
+const postService = require("../models/postService");
+const { sendError, sendSuccess } = require('../utils/responses');
 
 async function getAllPosts(req, res, next) {
-    const posts = await prisma.post.findMany({
-        include: {
-            user: true,
-            comments: true
-        }
-    });
+    const posts = await postService.getAllPostsWithDetails();
 
-    res.json(posts);
+    return sendSuccess(res, posts);
 }
 
 async function createPost(req, res, next) {
     const { title, content } = req.body;
+
     if (!title || !content) {
-        return res.status(400).json({ error: "Title and content are required" });
+        return sendError(res, 400, "Title and content are required")
     }
-    const post = await prisma.post.create({
-        data: {
-            title: title,
-            content: content,
-            userId: 1,
-        }
+
+    const post = await postService.createPost({
+        title, content, userId: 1,
     });
 
-    res.status(201).json(post)
+    return sendSuccess(res, post, 201)
 }
 
 async function updatePost(req, res, next) {
     const postId = req.validId;
-    if (isNaN(postId)) {
-        return res.status(400).json({ error: "Invalid post ID" });
-    }
+
     const { title, content } = req.body;
     const updateData = {};
 
@@ -39,69 +31,40 @@ async function updatePost(req, res, next) {
     if (content !== undefined) updateData.content = content;
 
     if (Object.keys(updateData).length === 0) {
-        return res.status(400).json({ error: "No valid fields to update" });
+        return sendError(res, 400, "No valid fields to update")
     }
 
-    const updatedPost = await prisma.post.update({
-        where: {
-            id: postId,
-        },
-        data: updateData
-    });
+    const updatedPost = await postService.updatePost(postId, updateData);
 
-    res.json(updatedPost);
+    return sendSuccess(res, updatedPost);
 }
 
 async function deletePost(req, res, next) {
     const postId = req.validId;
-    if (isNaN(postId)) {
-        return res.status(400).json({ error: "Invalid post ID" });
-    }
 
-    await prisma.post.delete({
-        where: {
-            id: postId
-        }
-    });
+    await postService.deletePost(postId);
 
     res.status(204).send();
 }
 
 async function togglePublishStatus(req, res, next) {
     const postId = req.validId;
-    if (isNaN(postId)) {
-        return res.status(400).json({ error: "Invalid post ID" });
-    }
 
-    const currentPost = await prisma.post.findUnique({
-        where: { id: postId },
-        select: { published: true }
-    });
+    const currentPost = await postService.togglePublishStatus(postId);
 
     if (!currentPost) {
-        return res.status(404).json({ error: "Post not found" });
+        return sendError(res, 404, "Post not found")
     }
 
-    const updatedPost = await prisma.post.update({
-        where: { id: postId },
-        data: { published: !currentPost.published }
-    });
+    const updatedPost = await postService.updatePostPublishStatus(postId, currentPost);
 
-    res.json(updatedPost);
+    return sendSuccess(res, updatedPost);
 }
 
 async function deleteComment(req, res, next) {
     const commentId = req.validId;
 
-    if (isNaN(commentId)) {
-        return res.status(400).json({ error: "Invalid comment ID" });
-    }
-
-    await prisma.comment.delete({
-        where: {
-            id: commentId,
-        }
-    });
+    await postService.deleteComment(commentId);
 
     res.status(204).send();
 }

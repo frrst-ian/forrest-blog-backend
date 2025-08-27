@@ -1,5 +1,6 @@
-function getApiInfo(req, res) {
-    res.json({ message: "Blog API is running" });
+const { sendSuccess } = require("../utils/responses");
+const getApiInfo = (req, res) => {
+    sendSuccess(res, { message: "Blog API is running" })
 }
 
 module.exports = { getApiInfo };
