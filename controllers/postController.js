@@ -13,7 +13,7 @@ async function getPublishedPosts(req, res, next) {
 }
 
 async function getPostWithComments(req, res, next) {
-    const id = parseInt(req.params.id);
+    const id = req.validId;
     if (isNaN(id)) {
         return res.status(400).json({ error: "Invalid post ID" });
     }
@@ -46,7 +46,7 @@ async function getPostWithComments(req, res, next) {
 }
 
 async function createComment(req, res, next) {
-    const postId = parseInt(req.params.id);
+    const postId = req.validId;
     if (isNaN(postId)) {
         return res.status(400).json({ error: "Invalid post ID" });
     }

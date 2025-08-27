@@ -1,4 +1,3 @@
-const { parse } = require("dotenv");
 const prisma = require("../models/prisma");
 
 async function getAllPosts(req, res, next) {
@@ -29,7 +28,7 @@ async function createPost(req, res, next) {
 }
 
 async function updatePost(req, res, next) {
-    const postId = parseInt(req.params.id);
+    const postId = req.validId;
     if (isNaN(postId)) {
         return res.status(400).json({ error: "Invalid post ID" });
     }
@@ -54,7 +53,7 @@ async function updatePost(req, res, next) {
 }
 
 async function deletePost(req, res, next) {
-    const postId = parseInt(req.params.id);
+    const postId = req.validId;
     if (isNaN(postId)) {
         return res.status(400).json({ error: "Invalid post ID" });
     }
@@ -69,7 +68,7 @@ async function deletePost(req, res, next) {
 }
 
 async function togglePublishStatus(req, res, next) {
-    const postId = parseInt(req.params.id);
+    const postId = req.validId;
     if (isNaN(postId)) {
         return res.status(400).json({ error: "Invalid post ID" });
     }
@@ -92,7 +91,7 @@ async function togglePublishStatus(req, res, next) {
 }
 
 async function deleteComment(req, res, next) {
-    const commentId = parseInt(req.params.id);
+    const commentId = req.validId;
 
     if (isNaN(commentId)) {
         return res.status(400).json({ error: "Invalid comment ID" });
