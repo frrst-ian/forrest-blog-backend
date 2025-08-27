@@ -2,7 +2,7 @@ const postService = require("../models/postService");
 const { sendError, sendSuccess } = require('../utils/responses');
 
 async function getAllPosts(req, res, next) {
-    const posts = await postService.getAllPostsWithDetails();
+    const posts = await postService.getAllPostWithDetails();
 
     return sendSuccess(res, posts);
 }
@@ -15,7 +15,7 @@ async function createPost(req, res, next) {
     }
 
     const post = await postService.createPost({
-        title, content, userId: 1,
+        title, content, userId: req.user.id,
     });
 
     return sendSuccess(res, post, 201)
@@ -23,8 +23,13 @@ async function createPost(req, res, next) {
 
 async function updatePost(req, res, next) {
     const postId = req.validId;
-
     const { title, content } = req.body;
+
+    const existingPost = await postService.getPostById(postId);
+    if (!existingPost) {
+        return sendError(res, 404, "Post not found");
+    }
+
     const updateData = {};
 
     if (title !== undefined) updateData.title = title;
@@ -41,6 +46,11 @@ async function updatePost(req, res, next) {
 
 async function deletePost(req, res, next) {
     const postId = req.validId;
+
+    const existingPost = await postService.getPostById(postId);
+    if (!existingPost) {
+        return sendError(res, 404, "Post not found");
+    }
 
     await postService.deletePost(postId);
 
