@@ -28,6 +28,7 @@ async function createComment(req, res, next) {
     }
 
     const comment = await postService.createComment(postId, authorName, content);
+    res.status(201).json(comment);
     return sendSuccess(res, comment, 201);
 }
 
