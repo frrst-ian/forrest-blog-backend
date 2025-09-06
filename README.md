@@ -83,8 +83,10 @@ The API will be available at `http://localhost:3000`
 - `GET /posts/:id` - Post with comments
 - `POST /posts/:id/comments` - Create comment
 - `GET /admin/posts` - All posts (auth required)
+- `GET /admin/posts/:id` - Single posts (auth required)
 - `POST /admin/posts` - Create post (auth required)
 - `PUT /admin/posts/:id` - Update post (auth required)
+- `PUT /admin/posts/:id/published` - Toggle post publish status (auth required)
 - `DELETE /admin/posts/:id` - Delete post (auth required)
 
 ## License

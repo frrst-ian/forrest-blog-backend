@@ -1,5 +1,5 @@
 // Load environment variables
-require('dotenv').config();
+require("dotenv").config();
 
 // Core dependencies
 const express = require("express");
@@ -7,7 +7,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 
 // Authentication
-const passport = require('./config/passport');
+const passport = require("./config/passport");
 
 // Route imports
 const indexRouter = require("./routes/index");
@@ -22,36 +22,39 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // cors config
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin ( Postman)
-    if (!origin) return callback(null, true);
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin ( Postman)
+      if (!origin) return callback(null, true);
 
-    const allowedOrigins = [
-      'http://localhost:3001',  // Blog reader frontend
-      'http://localhost:3002',  // Admin frontend  
-      'http://localhost:5173',  // Vite dev server
-      'https://myblog.com',   // Production blog reader
-      'https://admin.myblog.com' // Production admin
-    ];
+      const allowedOrigins = [
+        "http://localhost:3001", // Blog reader frontend
+        "http://localhost:3002", // Admin frontend
+        "http://localhost:5174", // Vite dev server
+        "http://localhost:5173", // Vite dev server
+        "https://myblog.com", // Production blog reader
+        "https://admin.myblog.com", // Production admin
+      ];
 
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: [
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'Authorization'
-  ],
-  optionsSuccessStatus: 200
-}));
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+    ],
+    optionsSuccessStatus: 200,
+  }),
+);
 
 // Route handlers
 app.use("/", indexRouter);
@@ -60,58 +63,63 @@ app.use("/admin", adminRouter);
 
 // Auth route
 app.post("/auth/login", (req, res) => {
-  passport.authenticate('local', { session: false }, (err, user, info) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
     if (err) {
-      return res.status(500).json({ error: 'Authentication error' });
+      return res.status(500).json({ error: "Authentication error" });
     }
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: "Invalid credentials" });
     }
 
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: "7d" },
     );
 
     res.json({
       token,
-      user: { id: user.id, email: user.email, username: user.username }
+      user: { id: user.id, email: user.email, username: user.username },
     });
   })(req, res);
 });
 
 // 404 handler for undefined routes
-app.use('/{*any}', (req, res) => {
-  res.status(404).json({ 
-    error: 'Page not found',
-    message: `Cannot ${req.method} ${req.originalUrl}`
+app.use("/{*any}", (req, res) => {
+  res.status(404).json({
+    error: "Page not found",
+    message: `Cannot ${req.method} ${req.originalUrl}`,
   });
 });
 
-// Global error handler 
+// Global error handler
 app.use((err, req, res, next) => {
-  console.error('Global error:', err.stack);
-  
+  console.error("Global error:", err.stack);
+
   // JWT errors
-  if (err.name === 'UnauthorizedError') {
-    return res.status(401).json({ error: 'Invalid token' });
+  if (err.name === "UnauthorizedError") {
+    return res.status(401).json({ error: "Invalid token" });
   }
-  
+
   // Validation errors
-  if (err.name === 'ValidationError') {
-    return res.status(400).json({ error: 'Validation failed', details: err.message });
+  if (err.name === "ValidationError") {
+    return res
+      .status(400)
+      .json({ error: "Validation failed", details: err.message });
   }
-  
+
   // Prisma errors
-  if (err.code && err.code.startsWith('P')) {
-    return res.status(400).json({ error: 'Database error', code: err.code });
+  if (err.code && err.code.startsWith("P")) {
+    return res.status(400).json({ error: "Database error", code: err.code });
   }
-  
+
   // Default server error
-  res.status(500).json({ 
-    error: 'Internal server error',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+  res.status(500).json({
+    error: "Internal server error",
+    message:
+      process.env.NODE_ENV === "development"
+        ? err.message
+        : "Something went wrong",
   });
 });
 

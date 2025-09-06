@@ -7,6 +7,18 @@ async function getAllPosts(req, res, next) {
     return sendSuccess(res, posts);
 }
 
+async function getPostById(req, res, next) {
+    const id = req.validId;
+
+    const post = await postService.getPostWithComments(id);
+
+    if (!post) {
+        return sendError(res, 404, "Post not found")
+    }
+
+    return sendSuccess(res, post);
+}
+
 async function createPost(req, res, next) {
     const { title, content } = req.body;
 
@@ -23,7 +35,7 @@ async function createPost(req, res, next) {
 
 async function updatePost(req, res, next) {
     const postId = req.validId;
-    const { title, content } = req.body;
+    const { title, content } = req.body; 
 
     const existingPost = await postService.getPostById(postId);
     if (!existingPost) {
@@ -81,6 +93,7 @@ async function deleteComment(req, res, next) {
 
 module.exports = {
     getAllPosts,
+    getPostById,
     createPost,
     updatePost,
     deletePost,

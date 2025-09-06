@@ -123,5 +123,4 @@ module.exports = {
     getPublishedPosts,
     getPostWithComments,
     createComment,
-    getPostById
 };
