@@ -33,8 +33,8 @@ app.use(
         "http://localhost:3002", // Admin frontend
         "http://localhost:5174", // Vite dev server
         "http://localhost:5173", // Vite dev server
-        "https://myblog.com", // Production blog reader
-        "https://admin.myblog.com", // Production admin
+        "https://ianforrest.netlify.app", // Production blog reader
+        "https://ianforrest-admin.netlify.app", // Production admin
       ];
 
       if (allowedOrigins.includes(origin)) {
