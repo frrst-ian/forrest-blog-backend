@@ -2,6 +2,7 @@
 
 ## Table of Contents
 1. [Description](#description)
+1. [Demo](#demo)
 2. [Features](#features)
 3. [Technologies Used](#technologies-used)
 4. [Project Challenges](#project-challenges)
@@ -9,6 +10,10 @@
 
 ## Description
 RESTful blog API with JWT authentication and admin dashboard. Built to practice modern backend development patterns and authentication flows.
+
+## Demo
+**Frontend:** https://ianforrest.netlify.app/posts  
+**API:** https://forrest-blog-backend.onrender.com
 
 ## Features
 - JWT-based authentication with Passport.js
