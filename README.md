@@ -23,7 +23,7 @@ This backend API powers a complete blog system with two main components: a publi
 This API serves two distinct frontend applications:
 
 ### Public Frontend
-- **Repository:** [forrest-blog-frontend](https://github.com/frrst-ian/forrest-blog-frontend)
+- **Repository:** [forrest-blog-public](https://github.com/frrst-ian/forrest-blog-public)
 - **Live Site:** [ianforrest.netlify.app](https://ianforrest.netlify.app)
 - **Purpose:** Public blog interface for readers
 - **Features:** Browse posts, read content, view comments
@@ -36,7 +36,7 @@ This API serves two distinct frontend applications:
 
 ### Private Admin Frontend  
 - **Repository:** [forrest-blog-private](https://github.com/frrst-ian/forrest-blog-private)
-- **Admin Panel:** [ianforrest.netlify.app](https://ianforrest-admin.netlify.app/auth/login)
+- **Admin Panel:** [ianforrest-admin.netlify.app](https://ianforrest-admin.netlify.app/auth/login)
 - **Purpose:** Content management interface (restricted access)
 - **Features:** Create/edit/delete posts, manage drafts, moderate comments
 
